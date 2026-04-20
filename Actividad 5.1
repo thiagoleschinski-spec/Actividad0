@@ -1,0 +1,37 @@
+bool seguir = true;
+
+while (seguir)
+{
+    Console.WriteLine("1. Saludar");
+    Console.WriteLine("2. Mostrar numeros");
+    Console.WriteLine("3. Salir");
+    Console.WriteLine("Opción: ");
+    string input = Console.ReadLine() ?? "";
+
+    if (!int.TryParse(input, out int opcion))
+    {
+        Console.WriteLine("Escribi un numero: ");
+        continue;
+    }
+
+    switch (opcion)
+    {
+        case 1:
+            Console.WriteLine("Hola!");
+            break;
+
+        case 2:
+            for (int i = 1; i <= 5; i++)
+                Console.WriteLine(i);
+            Console.WriteLine();
+            break;
+
+        case 3:
+            seguir = false;
+            break;
+
+        default:
+            Console.WriteLine("Opción Invalida.");
+            break;
+    }
+}
