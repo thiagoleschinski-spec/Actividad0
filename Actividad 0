@@ -1,0 +1,54 @@
+
+int CantComps = 0;
+int CantAlum = 0;
+double promedio;
+
+static double calcProm(int a,int b)
+{
+    double c = (double)a/b;
+    return c;
+}
+
+static int ConsoleIntTryParse(string text)
+{
+    int output = 0;
+    bool flag = false;
+    string? input;
+
+    while (flag == false) {
+
+
+    Console.WriteLine($"Por favor, ingrese la cantidad de {text}");
+    input = Console.ReadLine();
+    if (int.TryParse(input, out int num))
+
+    {
+        output = num;
+        flag = true;
+        if (output < 0) 
+        {
+            Console.WriteLine("Ingrese un valor válido");
+            flag = false;
+        }
+    }
+    else
+    {
+     Console.WriteLine("Ingrese un valor valido");
+     flag = false;
+    }
+}
+
+return output;
+}
+
+CantComps = ConsoleIntTryParse("Computadoras");
+CantAlum = ConsoleIntTryParse("Alumnos");
+
+if (CantAlum > CantComps)
+{
+    Console.WriteLine("Faltan computadoras");
+
+}
+promedio = calcProm(CantAlum, CantComps);
+Console.WriteLine($"El promedio es: {promedio}");
+
