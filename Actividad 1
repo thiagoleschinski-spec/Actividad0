@@ -1,0 +1,48 @@
+int[] laboratorios = new int[5];
+int alumnos = 0;
+static int ConsoleIntTryParse(string text)
+{
+    int output = 0;
+    bool flag = false;
+    string? input;
+    while (flag == false)
+    {
+        Console.WriteLine($"Ingrese la cantidad de {text}");
+        input = Console.ReadLine();
+
+        if (int.TryParse(input, out int num))
+        {
+            output = num;
+            flag = true;
+            if (output < 0)
+            {
+                Console.WriteLine("Ingrese un valor válido");
+                flag = false;
+            }
+        }
+        else
+        {
+            Console.WriteLine("Ingrese un valor válido");
+            flag = false;
+        }
+    }
+
+         return output;
+    }
+
+        for (int i = 0; i < 5; i++)
+        {
+            Console.WriteLine("Ingrese la cantidad de alumnos del laboratorio" + (i + 1));
+            alumnos = ConsoleIntTryParse("Alumnos");
+            laboratorios[i] = alumnos;
+        }
+
+        Console.WriteLine("La cantidad de alumnos es: " + laboratorios.Sum());
+        Console.WriteLine("El laboratorio con mayor cantidad de alumnos es: " + laboratorios.Max());
+        int count = 1;
+        foreach (int laboratorio in laboratorios)
+         {
+          Console.WriteLine($"Alumnos en laboratorio: {count}" + laboratorio);
+          count++;
+         }
+
