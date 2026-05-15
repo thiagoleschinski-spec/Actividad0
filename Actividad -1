@@ -1,1 +1,18 @@
+int a = 10;
 
+int b = 25;
+
+Console.WriteLine("Valor de A: " + a);
+Console.WriteLine("Valor de B: " + b);
+
+for (int i = 0; i < 5; i++)
+{
+    i = b;
+    b = a;
+    a = i;
+
+}
+
+Console.WriteLine("");
+Console.WriteLine("Valor de a despues de mezclar: " + a);
+Console.WriteLine("Valor de b despues de mezclar: " + b);
