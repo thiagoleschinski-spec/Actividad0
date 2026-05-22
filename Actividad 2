@@ -1,0 +1,63 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+
+        int[,] escuela = new int[2, 3];
+
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                escuela[i, j] = LeerEntero($"Introduce alumnos del piso {i}, laboratorio {j}: ");
+            }
+        }
+
+        int totalPrimerPiso = 0;
+
+        for (int j = 0; j < 3; j++)
+        {
+            totalPrimerPiso += escuela[0, j];
+        }
+        Console.WriteLine($"\n Total de alumnos en el primer piso (Piso 0): {totalPrimerPiso}");
+
+
+
+        Console.WriteLine("\n--- CONSULTA DE LABORATORIO ---");
+
+
+        int pisoConsulta = LeerEntero("Ingrese el número de Piso que desea consultar: ");
+        while (pisoConsulta < 0 || pisoConsulta >= 2)
+        {
+            Console.WriteLine(" Error: El piso ingresado no existe en esta escuela (Rangos válidos: 0 a 1).");
+            pisoConsulta = LeerEntero("Intente nuevamente. Ingrese un Piso válido: ");
+        }
+
+        
+        int labConsulta = LeerEntero("Ingrese el número de Laboratorio que desea consultar: ");
+        while (labConsulta < 0 || labConsulta >= 3)
+        {
+            Console.WriteLine(" Error: El laboratorio no existe (Rangos válidos: 0 a 2).");
+            labConsulta = LeerEntero("Intente nuevamente. Ingrese un Laboratorio válido: ");
+        }
+
+
+        Console.WriteLine($"\n Resultado: En el Piso {pisoConsulta}, Laboratorio {labConsulta} hay {escuela[pisoConsulta, labConsulta]} alumnos.");
+    }
+
+
+    static int LeerEntero(string mensaje)
+    {
+        int resultado;
+        Console.Write(mensaje);
+        while (!int.TryParse(Console.ReadLine(), out resultado))
+        {
+            Console.Write("Error, ¡ingresa un número válido!: ");
+        }
+        return resultado;
+    }
+}
+
+
