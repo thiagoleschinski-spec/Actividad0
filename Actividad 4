@@ -1,0 +1,274 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+
+class Programa
+{
+
+    static int[,] alumnos = new int[2, 3]
+    {
+        { 15, 25, 10 },
+        { 30,  8, 22 }
+    };
+
+    static bool[,] tieneInternet = new bool[2, 3]
+    {
+        { true,  false, true  },
+        { false, true,  false }
+    };
+
+
+    static void Main()
+    {
+        // ── Menú principal ──
+        Console.WriteLine("╔═══════════════════════════════════════╗");
+        Console.WriteLine("║   SISTEMA DE GESTIÓN ESCOLAR v2.0     ║");
+        Console.WriteLine("╚═══════════════════════════════════════╝");
+        Console.WriteLine();
+        Console.WriteLine("Datos precargados: ✓");
+        Console.WriteLine("  • Matriz alumnos [2,3]");
+        Console.WriteLine("  • Matriz internet [2,3]");
+        Console.WriteLine();
+
+        string opcion = PreguntarOpcion(
+            "¿Desea cargar los datos manualmente? (S/N): ",
+            new string[] { "S", "N" }
+        );
+
+        if (opcion == "S")
+        {
+            Console.WriteLine("\n── CARGA MANUAL DE DATOS ──");
+            CargarDatos();
+        }
+        else
+        {
+            Console.WriteLine("Usando datos precargados.");
+        }
+
+
+        MostrarMatrices();
+
+
+        Console.WriteLine("\n╔═══════════════════════════════════════╗");
+        Console.WriteLine("║         TOTAL DE ALUMNOS POR PISO     ║");
+        Console.WriteLine("╚═══════════════════════════════════════╝");
+
+        for (int i = 0; i < 2; i++)
+        {
+            int totalPiso = 0;
+            for (int j = 0; j < 3; j++)
+            {
+                totalPiso += alumnos[i, j];
+            }
+            Console.WriteLine($"  Piso {i}: {totalPiso} alumnos");
+        }
+
+
+        Console.WriteLine("\n╔═══════════════════════════════════════╗");
+        Console.WriteLine("║      CÁLCULO DE INFRAESTRUCTURA       ║");
+        Console.WriteLine("╚═══════════════════════════════════════╝");
+
+        int totalConInternet = 0;
+        int alumnosConInternet = 0;
+
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (tieneInternet[i, j])
+                {
+                    totalConInternet++;
+                    alumnosConInternet += alumnos[i, j];
+                }
+            }
+        }
+
+        Console.WriteLine($"  Laboratorios CON internet: {totalConInternet}");
+
+        if (totalConInternet > 0)
+        {
+            double promedio = (double)alumnosConInternet / totalConInternet;
+            Console.WriteLine($"  Promedio de alumnos en labs CON internet: {promedio:F1}");
+        }
+        else
+        {
+            Console.WriteLine("  ⚠ ¡Ningún laboratorio tiene internet!");
+            Console.WriteLine("  No se puede calcular el promedio (división por 0)");
+        }
+
+
+        Console.WriteLine("\n╔═══════════════════════════════════════╗");
+        Console.WriteLine("║         REPORTE DE ALERTA              ║");
+        Console.WriteLine("╚═══════════════════════════════════════╝");
+
+        bool hayAlertas = false;
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                if (alumnos[i, j] > 20 && !tieneInternet[i, j])
+                {
+                    Console.WriteLine($"   Piso {i}, Lab {j}: {alumnos[i, j]} alumnos SIN internet");
+                    hayAlertas = true;
+                }
+            }
+        }
+
+        if (!hayAlertas)
+        {
+            Console.WriteLine("  ✅ No hay alertas. Todos los labs críticos tienen internet.");
+        }
+
+
+        Console.WriteLine("\n╔═══════════════════════════════════════╗");
+        Console.WriteLine("║       CONSULTA DE LABORATORIO          ║");
+        Console.WriteLine("╚═══════════════════════════════════════╝");
+
+        int pisoConsulta = PreguntarEnteroRango("Ingrese el número de Piso: ", 0, 1, "Piso");
+        int labConsulta = PreguntarEnteroRango("Ingrese el número de Laboratorio: ", 0, 2, "Laboratorio");
+
+        string estadoInternet = tieneInternet[pisoConsulta, labConsulta] ? "SÍ tiene" : "NO tiene";
+        Console.WriteLine($"\n  📋 En el Piso {pisoConsulta}, Laboratorio {labConsulta}:");
+        Console.WriteLine($"     → {alumnos[pisoConsulta, labConsulta]} alumnos");
+        Console.WriteLine($"     → Internet: {estadoInternet}");
+
+
+        Console.WriteLine("\n╔═══════════════════════════════════════╗");
+        Console.WriteLine("║          EXPORTANDO REPORTE            ║");
+        Console.WriteLine("╚═══════════════════════════════════════╝");
+
+        List<string> lineas = new List<string>
+        {
+            "═════ REPORTE ESCOLAR═════",
+            ""
+        };
+
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 3; j++)
+            {
+                string internet = tieneInternet[i, j] ? "✓" : "✗";
+                lineas.Add($"Piso {i} - Lab {j}: {alumnos[i, j]} alumnos | Internet: {internet}");
+            }
+        }
+
+        lineas.Add("");
+        lineas.Add($"Total labs con internet: {totalConInternet}");
+        if (totalConInternet > 0)
+        {
+            lineas.Add($"Promedio alumnos en labs CON internet: {(double)alumnosConInternet / totalConInternet:F1}");
+        }
+
+        File.WriteAllLines("reporte_escuela.txt", lineas);
+        Console.WriteLine("   Datos guardados en 'reporte_escuela.txt ");
+
+
+
+        static void CargarDatos()
+        {
+            Console.WriteLine("\nIngresando datos para cada laboratorio...\n");
+
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    Console.WriteLine($"  ── Piso {i}, Laboratorio {j} ──");
+
+                    alumnos[i, j] = PreguntarEntero("    Alumnos: ");
+
+                    string respuesta = PreguntarSN("    ¿Tiene internet? (S/N): ");
+
+                    tieneInternet[i, j] = (respuesta == "S");
+
+                    Console.WriteLine();
+                }
+            }
+        }
+
+        static void MostrarMatrices()
+        {
+            Console.WriteLine("\n╔═══════════════════════════════════════╗");
+            Console.WriteLine("║            ESTADO DE LA ESCUELA        ║");
+            Console.WriteLine("╚═══════════════════════════════════════╝");
+
+            Console.WriteLine("\n  Matriz de ALUMNOS:");
+            Console.Write("       ");
+            for (int j = 0; j < 3; j++) Console.Write($"  Lab{j}  ");
+            Console.WriteLine();
+            Console.WriteLine("       ┌─────────┬─────────┬─────────┐");
+            for (int i = 0; i < 2; i++)
+            {
+                Console.Write($"  P{i}   │");
+                for (int j = 0; j < 3; j++)
+                {
+                    Console.Write($" {alumnos[i, j],5} │");
+                }
+                Console.WriteLine();
+                if (i < 1) Console.WriteLine("       ├─────────┼─────────┼─────────┤");
+            }
+            Console.WriteLine("       └─────────┴─────────┴─────────┘");
+
+            Console.WriteLine("\n  Matriz de INTERNET:");
+            Console.Write("       ");
+            for (int j = 0; j < 3; j++) Console.Write($"  Lab{j}  ");
+            Console.WriteLine();
+            Console.WriteLine("       ┌─────────┬─────────┬─────────┐");
+            for (int i = 0; i < 2; i++)
+            {
+                Console.Write($"  P{i}   │");
+                for (int j = 0; j < 3; j++)
+                {
+                    Console.Write($" {(tieneInternet[i, j] ? "  Sí  " : "  No  ")} │");
+                }
+                Console.WriteLine();
+                if (i < 1) Console.WriteLine("       ├─────────┼─────────┼─────────┤");
+            }
+            Console.WriteLine("       └─────────┴─────────┴─────────┘");
+        }
+
+        static string PreguntarOpcion(string mensaje, string[] opcionesValidas)
+        {
+            string entrada;
+            while (true)
+            {
+                Console.Write(mensaje);
+                entrada = Console.ReadLine().Trim().ToUpper();
+                bool valida = false;
+                foreach (string op in opcionesValidas)
+                {
+                    if (entrada == op) { valida = true; break; }
+                }
+                if (valida) return entrada;
+                Console.WriteLine($"   Error: escriba una de las opciones válidas: {string.Join(", ", opcionesValidas)}");
+            }
+        }
+
+        static string PreguntarSN(string mensaje)
+        {
+            return PreguntarOpcion(mensaje, new string[] { "S", "N" });
+        }
+
+        static int PreguntarEntero(string mensaje)
+        {
+            int resultado;
+            Console.Write(mensaje);
+            while (!int.TryParse(Console.ReadLine(), out resultado) || resultado < 0)
+            {
+                Console.Write("   Error, ingrese un número válido: ");
+            }
+            return resultado;
+        }
+
+        static int PreguntarEnteroRango(string mensaje, int min, int max, string nombre)
+        {
+            int resultado;
+            Console.Write(mensaje);
+            while (!int.TryParse(Console.ReadLine(), out resultado) || resultado < min || resultado > max)
+            {
+                Console.Write($"   Error: {nombre} inválido (rango: {min} a {max}). Intente: ");
+            }
+            return resultado;
+        }
+    }
+}
+
