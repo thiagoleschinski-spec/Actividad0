@@ -1,0 +1,103 @@
+using System;
+
+class GuerraGalactica
+{
+    static void Main()
+    {
+        // Se declaran las dos matrices 3D
+        int[,,] nave1 = new int[2, 3, 4];
+        int[,,] nave2 = new int[2, 3, 4];
+
+        Console.WriteLine("====GUERRA GALACTICA====\n");
+
+        Console.WriteLine("JUGADOR 1: CARGAR TRIPULACION (20 TRIPULANTES MAX):");
+        Cargar(nave1);
+
+        Console.WriteLine("\nJUGADOR 2: CARGAR TRIPULACION (20 TRIPULANTES MAX):");
+        Cargar(nave2);
+
+        Console.WriteLine("\n====COMIENZA EL COMBATE====\n");
+
+        int turno = 1;
+        while (true)
+        {
+            int defensor = (turno == 1) ? 2 : 1;
+            int[,,] naveEnemiga = (defensor == 1) ? nave1 : nave2;
+
+            Console.WriteLine("--- Turno del Jugador " + turno + " ---");
+            Disparar(naveEnemiga);
+
+            int vivos = Sumar(naveEnemiga);
+            Console.WriteLine("Tripulantes en nave " + defensor + ": " + vivos + "\n");
+
+            if (vivos == 0)
+            {
+                Console.WriteLine("EL COMANDANTE " + turno + " HA DOMINADO EL SECTOR!");
+                break;
+            }
+
+            turno = (turno == 1) ? 2 : 1;
+        }
+    }
+
+    // Lee un numero entero (no se rompe con letras)
+    static int Leer(string mensaje)
+    {
+        int n;
+        Console.Write(mensaje);
+        while (!int.TryParse(Console.ReadLine(), out n))   // si no es numero, repite
+            Console.Write("Numero invalido. " + mensaje);
+        return n;
+    }
+
+    static void Cargar(int[,,] nave)
+    {
+        int total = 0;
+        for (int a = 0; a < 2; a++)          // Alas
+            for (int c = 0; c < 3; c++)      // Capsulas
+                for (int h = 0; h < 4; h++)  // Habitaciones
+                {
+                    int cant = Leer("Ala " + a + " Capsula " + c + " Hab " + h + ": ");
+
+                    if (cant < 0 || total + cant > 20)
+                        Console.WriteLine("Valor no permitido (max 20). Se deja en 0.");
+                    else
+                    {
+                        nave[a, c, h] = cant;   // guarda en la celda
+                        total += cant;          // suma al total
+                    }
+                }
+    }
+
+    static void Disparar(int[,,] nave)
+    {
+        int a = Leer("Ala (0-1): ");
+        int c = Leer("Capsula (0-2): ");
+        int h = Leer("Habitacion (0-3): ");
+
+        // MURO DE SEGURIDAD: si esta fuera de rango, pierde el turno
+        if (a < 0 || a > 1 || c < 0 || c > 2 || h < 0 || h > 3)
+        {
+            Console.WriteLine("Error de punteria! Pierdes el turno.");
+            return;
+        }
+
+        if (nave[a, c, h] > 0)              // habia tripulantes
+        {
+            nave[a, c, h] = 0;             // se eliminan
+            Console.WriteLine("Impacto directo! Tripulacion eliminada.");
+        }
+        else                               // celda vacia
+            Console.WriteLine("Fallaste! Espacio vacio.");
+    }
+
+    static int Sumar(int[,,] nave)
+    {
+        int suma = 0;
+        for (int a = 0; a < 2; a++)
+            for (int c = 0; c < 3; c++)
+                for (int h = 0; h < 4; h++)
+                    suma += nave[a, c, h];
+        return suma;
+    }
+}
