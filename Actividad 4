@@ -25,7 +25,7 @@ class Programa
         Console.WriteLine("║   SISTEMA DE GESTIÓN ESCOLAR v2.0     ║");
         Console.WriteLine("╚═══════════════════════════════════════╝");
         Console.WriteLine();
-        Console.WriteLine("Datos precargados: ✓");
+        Console.WriteLine("Datos precargados: ");
         Console.WriteLine("  • Matriz alumnos [2,3]");
         Console.WriteLine("  • Matriz internet [2,3]");
         Console.WriteLine();
@@ -92,7 +92,7 @@ class Programa
         }
         else
         {
-            Console.WriteLine("  ⚠ ¡Ningún laboratorio tiene internet!");
+            Console.WriteLine("   ¡Ningún laboratorio tiene internet!");
             Console.WriteLine("  No se puede calcular el promedio (división por 0)");
         }
 
@@ -116,7 +116,7 @@ class Programa
 
         if (!hayAlertas)
         {
-            Console.WriteLine("  ✅ No hay alertas. Todos los labs críticos tienen internet.");
+            Console.WriteLine("   No hay alertas. Todos los labs críticos tienen internet.");
         }
 
 
@@ -128,7 +128,7 @@ class Programa
         int labConsulta = PreguntarEnteroRango("Ingrese el número de Laboratorio: ", 0, 2, "Laboratorio");
 
         string estadoInternet = tieneInternet[pisoConsulta, labConsulta] ? "SÍ tiene" : "NO tiene";
-        Console.WriteLine($"\n  📋 En el Piso {pisoConsulta}, Laboratorio {labConsulta}:");
+        Console.WriteLine($"\n   En el Piso {pisoConsulta}, Laboratorio {labConsulta}:");
         Console.WriteLine($"     → {alumnos[pisoConsulta, labConsulta]} alumnos");
         Console.WriteLine($"     → Internet: {estadoInternet}");
 
@@ -147,7 +147,7 @@ class Programa
         {
             for (int j = 0; j < 3; j++)
             {
-                string internet = tieneInternet[i, j] ? "✓" : "✗";
+                string internet = tieneInternet[i, j] ? "N" : "S";
                 lineas.Add($"Piso {i} - Lab {j}: {alumnos[i, j]} alumnos | Internet: {internet}");
             }
         }
